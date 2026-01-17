@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>アンケートフォーム</title>
+    <style>
+        body { font-family: sans-serif; margin: 50px; line-height: 1.6; }
+        .container { max-width: 400px; }
+        input, textarea { width: 100%; margin-bottom: 10px; display: block; }
+        button { padding: 10px 20px; cursor: pointer; background: #007bff; color: white; border: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>アンケート</h2>
+        <input type="text" id="user_name" placeholder="お名前">
+        <input type="number" id="age" placeholder="年齢">
+        <textarea id="feedback" placeholder="ご意見・感想"></textarea>
+        <input type="number" id="rating" placeholder="評価 (1-5)" min="1" max="5">
+        <button onclick="submitSurvey()">送信する</button>
+        <p id="message"></p>
+    </div>
+
+    <script>
+        async function submitSurvey() {
+            const data = {
+                user_name: document.getElementById('user_name').value,
+                age: parseInt(document.getElementById('age').value),
+                feedback: document.getElementById('feedback').value,
+                rating: parseInt(document.getElementById('rating').value)
+            };
+
+            const response = await fetch('/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+            document.getElementById('message').innerText = result.message;
+        }
+    </script>
+</body>
+</html>
